@@ -10,14 +10,21 @@ DEFAULT_PSEUDOCOUNT = 1
 
 # Top-most parser
 blockify_parser = argparse.ArgumentParser(
-    description="Genomic peak caller for one-dimensional data"
+    description="Genomic peak caller for one-dimensional data",
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
 # Sub-parsers
 subcommands = blockify_parser.add_subparsers(help="Subcommands", dest="command")
 # Parent parser (shared by sub-parsers)
-input_parser = argparse.ArgumentParser(add_help=False)
+input_parser = argparse.ArgumentParser(
+    add_help=False,
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+)
 input_parser.add_argument("-i", "--input", required=True, help="Input .ccf file")
-regions_parser = argparse.ArgumentParser(add_help=False)
+regions_parser = argparse.ArgumentParser(
+    add_help=False,
+    formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+)
 regions_parser.add_argument(
     "-r",
     "--regions",
@@ -41,7 +48,7 @@ prior_group.add_argument(
     "--p0",
     type=float,
     default=DEFAULT_SEGMENTATION_P0,
-    help="Empirical prior based on a specified false-positive rate (between 0 and 1)",
+    help="Empirical prior based on a specified false-positive rate; must be between 0 and 1 (default: %(default)s)",
 )
 # prior_group.add_argument("--gamma",
 #                          type=float,
@@ -50,7 +57,7 @@ segment.add_argument(
     "--method",
     choices=["OP", "PELT"],
     default="PELT",
-    help="Segment using the optimal partitioning (OP) or pruned exact linear time (PELT) algorithm",
+    help="Segment using the optimal partitioning (OP) or pruned exact linear time (PELT) algorithm (default: %(default)s)",
 )
 # segment.add_argument("-t",
 #                      "--time",
@@ -74,14 +81,14 @@ normalize.add_argument(
     "--libraryFactor",
     type=float,
     default=DEFAULT_NORMALIZATION_LIBRARY_FACTOR,
-    help="Normalization factor for library size",
+    help="Normalization factor for library size (default: %(default)s)",
 )
 normalize.add_argument(
     "-l",
     "--lengthFactor",
     type=float,
     default=DEFAULT_NORMALIZATION_LENGTH_FACTOR,
-    help="Normalization factor for the length of regions; used to calculate scaled rates of events per interval",
+    help="Normalization factor for the length of regions; used to calculate scaled rates of events per interval (default: %(default)s)",
 )
 
 # Peak calling (annotation) sub-command
@@ -119,7 +126,7 @@ annotate.add_argument(
     type=str,
     required="-a" in sys.argv or "--alpha" in sys.argv,
     default=DEFAULT_MULTIPLE_HYPOTHESIS_CORRECTION,
-    help="If alpha provided, need to specificity method of multiple hypothesis correction. See statsmodels.stats.multitest for a complete list of choices",
+    help="If alpha provided, need to specificity method of multiple hypothesis correction. See statsmodels.stats.multitest for a complete list of choices (default: %(default)s)",
 )
 annotate.add_argument(
     "-d",
@@ -134,7 +141,7 @@ annotate.add_argument(
 annotate.add_argument(
     "--max", type=int, required=False, help="Report peaks smaller than this cutoff (bp)"
 )
-annotate.add_argument("-t", "--tight", action="store_true", default=False)
+annotate.add_argument("-t", "--tight", action="store_true", help="Shrink peak boundaries to overlap data points", default=False)
 annotate.add_argument(
     "-c",
     "--pseudocount",
@@ -154,7 +161,7 @@ downsample.add_argument(
     "-n",
     "--number",
     type=int,
-    help="Number of events to downsample (cannot exceed length of input file)",
+    help="Number of entries to downsample to (cannot exceed length of input file)",
     required=True,
 )
 downsample.add_argument("-s", "--seed", type=int, help="Random seed")
