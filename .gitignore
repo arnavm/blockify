@@ -2,3 +2,16 @@
 *.pyc
 *.ccf
 *hg38_TTAA_canon.bed
+*.cls
+*.ist
+*.sty
+*.xdy
+*.aux
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.log
+*.out
+*.toc
