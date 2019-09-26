@@ -27,7 +27,7 @@ def run():
         result, intermediate = annotation.annotate_from_command_line(args)
         # result is a BedTool object
         result.saveas(args.output)
-        if intermediate:
+        if args.intermediate:
             intermediate.to_csv(args.intermediate)
     elif args.command == "downsample":
         result = downsampling.downsample_from_command_line(args)
