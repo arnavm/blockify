@@ -14,13 +14,21 @@ blockify_parser = argparse.ArgumentParser(
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
 # Sub-parsers
-subcommands = blockify_parser.add_subparsers(help="Subcommands", dest="command")
+subcommands = blockify_parser.add_subparsers(
+    help="Subcommands",
+    dest="command"
+)
 # Parent parser (shared by sub-parsers)
 input_parser = argparse.ArgumentParser(
     add_help=False,
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
-input_parser.add_argument("-i", "--input", required=True, help="Input .ccf file")
+input_parser.add_argument(
+    "-i",
+    "--input",
+    required=True,
+    help="Input .ccf file"
+)
 regions_parser = argparse.ArgumentParser(
     add_help=False,
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -39,8 +47,16 @@ segment = subcommands.add_parser(
     help="Segment a .ccf file using Bayesian blocks",
     parents=[input_parser],
 )
-segment.add_argument("-o", "--output", required=True, help="Output file (BED format)")
-prior_group = segment.add_mutually_exclusive_group(required=False)
+segment.add_argument(
+    "-o",
+    "--output",
+    required=False,
+    default=sys.stdout,
+    help="Output file (BED format); default: stdout"
+)
+prior_group = segment.add_mutually_exclusive_group(
+    required=False
+)
 prior_group.add_argument(
     "--prior", type=float, help="Explicit prior on the number of blocks"
 )
@@ -74,7 +90,11 @@ normalize = subcommands.add_parser(
     conflict_handler="resolve",
 )
 normalize.add_argument(
-    "-o", "--output", required=True, help="Output file (bedGraph format)"
+    "-o",
+    "--output",
+    required=False,
+    default=sys.stdout,
+    help="Output file (bedGraph format); default: stdout"
 )
 normalize.add_argument(
     "-k",
@@ -100,7 +120,11 @@ annotate = subcommands.add_parser(
     conflict_handler="resolve",
 )
 annotate.add_argument(
-    "-bg", "--background", type=str, help="Background .ccf file", required=True
+    "-bg",
+    "--background",
+    type=str,
+    help="Background .ccf file",
+    required=True
 )
 annotate.add_argument(
     "--intermediate",
@@ -108,7 +132,9 @@ annotate.add_argument(
     required=False,
     help="Intermediate file to write verbose output (CSV format)",
 )
-alpha_group = annotate.add_mutually_exclusive_group(required=True)
+alpha_group = annotate.add_mutually_exclusive_group(
+    required=True
+)
 alpha_group.add_argument(
     "-a",
     "--alpha",
@@ -136,12 +162,24 @@ annotate.add_argument(
     help="Merge features closer than this distance (bp)",
 )
 annotate.add_argument(
-    "--min", type=int, required=False, help="Report peaks larger than this cutoff (bp)"
+    "--min",
+    type=int,
+    required=False,
+    help="Report peaks larger than this cutoff (bp)"
 )
 annotate.add_argument(
-    "--max", type=int, required=False, help="Report peaks smaller than this cutoff (bp)"
+    "--max",
+    type=int,
+    required=False,
+    help="Report peaks smaller than this cutoff (bp)"
 )
-annotate.add_argument("-t", "--tight", action="store_true", help="Shrink peak boundaries to overlap data points", default=False)
+annotate.add_argument(
+    "-t",
+    "--tight",
+    action="store_true",
+    help="Shrink peak boundaries to overlap data points",
+    default=False
+)
 annotate.add_argument(
     "-c",
     "--pseudocount",
@@ -164,10 +202,21 @@ downsample.add_argument(
     help="Number of entries to downsample to (cannot exceed length of input file)",
     required=True,
 )
-downsample.add_argument("-s", "--seed", type=int, help="Random seed")
 downsample.add_argument(
-    "--naive", action="store_true", help="Sample every row with equal likelihood"
+    "-s",
+    "--seed",
+    type=int,
+    help="Random seed"
 )
 downsample.add_argument(
-    "-o", "--output", required=True, help="Output file (CCF format)"
+    "--naive",
+    action="store_true",
+    help="Sample every row with equal likelihood"
+)
+downsample.add_argument(
+    "-o",
+    "--output",
+    required=False,
+    default=sys.stdout,
+    help="Output file (CCF format); default: stdout"
 )
