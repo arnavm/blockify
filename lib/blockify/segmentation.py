@@ -3,6 +3,7 @@ from io import StringIO
 import numpy as np
 import pandas as pd
 from pybedtools import BedTool
+import sys
 from . import utilities
 import warnings
 
@@ -90,7 +91,7 @@ def segment(input_ccf, method, p0=None, prior=None):
     input_df["coordinate"] = (input_df["start"] + input_df["end"]) // 2
     # Get list of chromosomes specified in input_df
     chroms = utilities.getChromosomesInDF(input_df)
-
+    n_chroms = len(chroms)
     # Now we are ready to segment. Instantiate a SegmentationRecord object
     segmentation = SegmentationRecord()
     # segmentation.filename = input_df
@@ -99,7 +100,9 @@ def segment(input_ccf, method, p0=None, prior=None):
         segmentation.p0 = p0
 
     # Segment by chromosome
-    for chrom in chroms:
+    for i, chrom in enumerate(chroms):
+        # Print progress to stdout
+        print("[{}/{}] Processing {}".format(i, n_chroms, chrom), file=sys.stderr)
         # Get the block boundaries of the segmentation
         block_boundaries = alg.segment(
             input_df[input_df["chrom"] == chrom]["coordinate"]
@@ -115,6 +118,9 @@ def segment(input_ccf, method, p0=None, prior=None):
             segmentation.df = segmentation.df.append(df)
             # Store the number of blocks in the SegmentationRecord
             segmentation.nblocks[chrom] = len(df)
+            print("--Found {} blocks".format(segmentation.nblocks[chrom]), file=sys.stderr)
+        else:
+            print("--Skipped, no blocks found", file=sys.stderr)
     segmentation.finalize()
 
     return segmentation
