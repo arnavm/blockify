@@ -4,6 +4,7 @@ from pybedtools import BedTool
 from . import segmentation
 import scipy.stats as stats
 import statsmodels.stats.multitest as multitest
+import sys
 from . import utilities
 import warnings
 
@@ -97,6 +98,7 @@ def annotate(
     input_ccf,
     regions_bed,
     background_ccf,
+    measurement,
     intermediate=None,
     alpha=None,
     p_value=None,
@@ -146,11 +148,21 @@ def annotate(
     # Calculate density of insertions in each block
     df["Density"] = df["Input"] / (df["end"] - df["start"])
 
-    # Calculate the one-tail Poisson p-value of observing Input or more number of events
-    # given a lambda of Norm_bg. Use the survival function (sf), which is 1 - CDF.
-    # Need to specify Input - 1 because for discrete distributions, 1 - cdf(x) is p(X ≥ x + 1);
-    # sf(x - 1) is thus p(X ≥ x).
-    df["pValue"] = stats.poisson.sf(df["Input"] - 1, df["Norm_bg"])
+    if measurement == "enrichment":
+        # Calculate the one-tail Poisson p-value of observing Input or more number of events
+        # given a lambda of Norm_bg. Use the survival function (sf), which is 1 - CDF.
+        # Need to specify Input - 1 because for discrete distributions, 1 - cdf(x) is p(X ≥ x + 1);
+        # sf(x - 1) is thus p(X ≥ x).
+        df["pValue"] = stats.poisson.sf(df["Input"] - 1, df["Norm_bg"])
+    elif measurement == "depletion":
+        # Calculate the one-tail Poisson p-value of observing Input or fewer number of events
+        # given a lambda of Norm_bg. Use the cumulative distribution function (cdf).
+        # cdf(x) is  p(X ≤ x).
+        df["pValue"] = stats.poisson.cdf(df["Input"], df["Norm_bg"])
+    else:
+        # Something unexpected happened
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
     # Replace 0's with 1/FLOAT_MAX to obtain finite -log10(pValue)
     df.replace(to_replace=0, value=1 / utilities.FLOAT_MAX, inplace=True)
     df["negLog10pValue"] = -np.log10(df["pValue"])
@@ -214,6 +226,7 @@ def annotate_from_command_line(args):
         input_ccf,
         regions_bed,
         background_ccf,
+        measurement=args.measure,
         intermediate=args.intermediate,
         alpha=args.alpha,
         p_value=args.pValueCutoff,

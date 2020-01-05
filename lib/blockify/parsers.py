@@ -7,6 +7,7 @@ DEFAULT_NORMALIZATION_LIBRARY_FACTOR = 10 ** 6
 DEFAULT_NORMALIZATION_LENGTH_FACTOR = None
 DEFAULT_MULTIPLE_HYPOTHESIS_CORRECTION = "bonferroni"
 DEFAULT_PSEUDOCOUNT = 1
+DEFAULT_MEASUREMENT = "enrichment"
 
 # Top-most parser
 blockify_parser = argparse.ArgumentParser(
@@ -186,6 +187,13 @@ annotate.add_argument(
     type=float,
     default=DEFAULT_PSEUDOCOUNT,
     help="Pseudocount for background regions (default: %(default)s)",
+)
+annotate.add_argument(
+    "--measure",
+    type=str,
+    choices=["enrichment", "depletion"],
+    default=DEFAULT_MEASUREMENT,
+    help="Perform a one-tailed test for either enrichment or depletion relative to the background file (default: %(default)s)",
 )
 
 # Downsample sub-command
