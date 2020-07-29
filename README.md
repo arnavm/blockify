@@ -1,2 +1,3 @@
 # blockify
-Genomic peak caller
+
+Fast, mathematically optimal genome segmentation with Bayesian blocks
