@@ -5,15 +5,16 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="blockify", # Replace with your own username
-    version="0.1.1",
+    version="0.1.2",
     author="Arnav Moudgil",
     author_email="amoudgil@wustl.edu",
     description="Fast and optimal genome segmentation with Bayesian blocks",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/arnavm/blockify",
-    packages=setuptools.find_packages(where='lib/blockify'),
-    package_dir={'': "lib/blockify"},
+    package_dir={'': "lib"},
+    packages=setuptools.find_packages(where='lib'),
+    scripts=["bin/blockify"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: BSD License",
@@ -24,5 +25,5 @@ setuptools.setup(
     ],
     python_requires='>=3.4',
     install_requires=["numpy", "pandas", "scipy", "statsmodels", "pybedtools"],
-    keywords="genomics,segmentation,bayesian,"
+    keywords="genomics,segmentation,bayesian",
 )
