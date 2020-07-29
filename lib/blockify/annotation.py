@@ -81,6 +81,43 @@ def tighten(data):
     return BedTool.from_dataframe(refined)
 
 
+def parcelConsecutiveBlocks(df):
+    # df is a pandas DataFrame; return value is a list of
+    # DataFrames, each of which contains consecutive blocks
+    outlist = []
+    chroms = np.unique(df.chrom)
+    for chrom in chroms:
+        chrom_rows = df[df.chrom == chrom].reset_index()
+        for i, row in chrom_rows.iterrows():
+            i = int(i)
+            if i == 0:
+                # Start of a new chromosome
+                outlist.append([row])
+            else:
+                # Check if this block is adjacent to the previous block
+                if chrom_rows.iloc[i].start == chrom_rows.iloc[i - 1].end:
+                    # If so, append to the previous list
+                    outlist[-1].append(row)
+                else:
+                    # If not, create a new list
+                    outlist.append([row])
+    return [pd.DataFrame(_) for _ in outlist]
+
+
+def getPeakSummits(df, metric="pValue"):
+    # df is a pandas DataFrame; return value is also a DataFrame
+    assert metric in ["pValue", "density"]
+    if metric == "pValue":
+        column = "negLog10corrected"
+    elif metric == "density":
+        column = "Net_density"
+    else:
+        # Something unexpected happened
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
+    return pd.concat([_[_[column] == _[column].max()] for _ in parcelConsecutiveBlocks(df)]).reset_index().drop(columns=["level_0", "index"])
+
+
 def sizeFilter(bed, min_size, max_size):
     # For size filter, convert to DataFrame, filter, and go back to BED
     df = bed.to_dataframe()
@@ -108,6 +145,7 @@ def annotate(
     max_size=None,
     pseudocount=1,
     tight=False,
+    summit=False,
 ):
     # input_ccf, regions, and background_ccf are BedTool objects
     # Validate annotation arguments
@@ -137,28 +175,28 @@ def annotate(
     df = data.to_dataframe()
     df = df.rename(index=str, columns={"name": "Input", "score": "Background"})
 
-    # Calculate the normalized background (Norm_bg) number of events
+    # Calculate the normalized background (Normed_bg) number of events
     # by multiplying Background by scalingFactor. Then add the pseudocount,
-    # in the case of Norm_bg; and the floor of the pseudocount to Input.
+    # in the case of Normed_bg; and the floor of the pseudocount to Input.
     # This preserves log-fold change if Background is 0, and keeps the value
     # added to Input an integer (if pseudocount is a float).
     df["Input"] += np.floor(pseudocount)
-    df["Norm_bg"] = df["Background"] * scalingFactor + pseudocount
+    df["Normed_bg"] = df["Background"] * scalingFactor + pseudocount
 
     # Calculate density of insertions in each block
-    df["Density"] = df["Input"] / (df["end"] - df["start"])
+    df["Net_density"] = (df["Input"] - df["Normed_bg"]) / (df["end"] - df["start"])
 
     if measurement == "enrichment":
         # Calculate the one-tail Poisson p-value of observing Input or more number of events
-        # given a lambda of Norm_bg. Use the survival function (sf), which is 1 - CDF.
+        # given a lambda of Normed_bg. Use the survival function (sf), which is 1 - CDF.
         # Need to specify Input - 1 because for discrete distributions, 1 - cdf(x) is p(X ≥ x + 1);
         # sf(x - 1) is thus p(X ≥ x).
-        df["pValue"] = stats.poisson.sf(df["Input"] - 1, df["Norm_bg"])
+        df["pValue"] = stats.poisson.sf(df["Input"] - 1, df["Normed_bg"])
     elif measurement == "depletion":
         # Calculate the one-tail Poisson p-value of observing Input or fewer number of events
-        # given a lambda of Norm_bg. Use the cumulative distribution function (cdf).
+        # given a lambda of Normed_bg. Use the cumulative distribution function (cdf).
         # cdf(x) is  p(X ≤ x).
-        df["pValue"] = stats.poisson.cdf(df["Input"], df["Norm_bg"])
+        df["pValue"] = stats.poisson.cdf(df["Input"], df["Normed_bg"])
     else:
         # Something unexpected happened
         print("Unexpected error:", sys.exc_info()[0])
@@ -183,6 +221,11 @@ def annotate(
         )
         df["negLog10corrected"] = -np.log10(df["corrected_pValue"])
         out_df = df[df["rejected"]]
+
+    # Return peak summits, if specified
+    if summit:
+        out_df = getPeakSummits(out_df)
+
     # Convert out_df to out_bed
     out_bed = BedTool.from_dataframe(out_df)
 

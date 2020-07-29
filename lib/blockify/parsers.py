@@ -174,11 +174,21 @@ annotate.add_argument(
     required=False,
     help="Report peaks smaller than this cutoff (bp)"
 )
-annotate.add_argument(
+resolution_group = annotate.add_mutually_exclusive_group(
+    required=False
+)
+resolution_group.add_argument(
     "-t",
     "--tight",
     action="store_true",
     help="Shrink peak boundaries to overlap data points",
+    default=False
+)
+resolution_group.add_argument(
+    "-s",
+    "--summit",
+    action="store_true",
+    help="Return peak summits",
     default=False
 )
 annotate.add_argument(

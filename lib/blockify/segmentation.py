@@ -102,7 +102,7 @@ def segment(input_ccf, method, p0=None, prior=None):
     # Segment by chromosome
     for i, chrom in enumerate(chroms):
         # Print progress to stdout
-        print("[{}/{}] Processing {}".format(i, n_chroms, chrom), file=sys.stderr)
+        print("[{}/{}] Processing {}".format(i + 1, n_chroms, chrom), file=sys.stderr)
         # Get the block boundaries of the segmentation
         block_boundaries = alg.segment(
             input_df[input_df["chrom"] == chrom]["coordinate"]
