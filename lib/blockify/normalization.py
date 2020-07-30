@@ -32,8 +32,9 @@ def normalize(input_ccf, regions_bed, libraryFactor, lengthFactor):
     library_scaling_constant = len(input_ccf.to_dataframe()) / libraryFactor
 
     # For each interval in regions, count the number of events;
-    # normalize the count by library_scaling_constant
-    intersect_df = regions_bed.intersect(input_ccf, c=True).to_dataframe()
+    # normalize the count by library_scaling_constant.
+    # The last call to .iloc should be able to accomodate region BED files with arbitrary numbers of fields
+    intersect_df = regions_bed.intersect(input_ccf, c=True).to_dataframe().iloc[:, [0, 1, 2, -1]]
     intersect_df.columns = ["chrom", "start", "end", "rawCount"]
     intersect_df["normCount"] = intersect_df["rawCount"] / library_scaling_constant
 
