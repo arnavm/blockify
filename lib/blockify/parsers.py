@@ -28,7 +28,7 @@ input_parser.add_argument(
     "-i",
     "--input",
     required=True,
-    help="Input .ccf file"
+    help="Input qBED file"
 )
 regions_parser = argparse.ArgumentParser(
     add_help=False,
@@ -44,8 +44,8 @@ regions_parser.add_argument(
 # Segmentation sub-command
 segment = subcommands.add_parser(
     name="segment",
-    description="Segment a .ccf file using Bayesian blocks",
-    help="Segment a .ccf file using Bayesian blocks",
+    description="Segment a qBED file using Bayesian blocks",
+    help="Segment a qBED file using Bayesian blocks",
     parents=[input_parser],
 )
 segment.add_argument(
@@ -85,8 +85,8 @@ segment.add_argument(
 # Normalize sub-command
 normalize = subcommands.add_parser(
     name="normalize",
-    description="Calculate normalized rates of events in a .ccf file",
-    help="Calculate normalized rates of events in a .ccf file",
+    description="Calculate normalized rates of events in a qBED file",
+    help="Calculate normalized rates of events in a qBED file",
     parents=[segment, regions_parser],
     conflict_handler="resolve",
 )
@@ -115,8 +115,8 @@ normalize.add_argument(
 # Peak calling (annotation) sub-command
 annotate = subcommands.add_parser(
     name="call",
-    description="Call peaks in a .ccf file",
-    help="Call peaks in a .ccf file",
+    description="Call peaks in a qBED file",
+    help="Call peaks in a qBED file",
     parents=[segment, regions_parser],
     conflict_handler="resolve",
 )
@@ -124,7 +124,7 @@ annotate.add_argument(
     "-bg",
     "--background",
     type=str,
-    help="Background .ccf file",
+    help="Background qBED file",
     required=True
 )
 annotate.add_argument(
@@ -209,8 +209,8 @@ annotate.add_argument(
 # Downsample sub-command
 downsample = subcommands.add_parser(
     name="downsample",
-    description="Downsample a .ccf file in proportion to the value column",
-    help="Downsample a .ccf file in proportion to the value column",
+    description="Downsample a qBED file in proportion to the value column",
+    help="Downsample a qBED file in proportion to the value column",
     parents=[input_parser],
 )
 downsample.add_argument(

@@ -253,22 +253,22 @@ def annotate(
 
 
 def annotate_from_command_line(args):
-    input_ccf = BedTool(args.input)
+    input_file = BedTool(args.input)
     # If regions has been supplied, use it;
     if args.regions:
         regions_bed = BedTool(args.regions)
     # otherwise, segment the CCF
     else:
         region_segmentation = segmentation.segment(
-            input_ccf, args.method, p0=args.p0, prior=args.prior
+            input_file, args.method, p0=args.p0, prior=args.prior
         )
         regions_bed = BedTool.from_dataframe(region_segmentation.df)
-    background_ccf = BedTool(args.background)
+    background_file = BedTool(args.background)
 
     return annotate(
-        input_ccf,
+        input_file,
         regions_bed,
-        background_ccf,
+        background_file,
         measurement=args.measure,
         intermediate=args.intermediate,
         alpha=args.alpha,

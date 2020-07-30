@@ -44,9 +44,9 @@ class SegmentationRecord(object):
         self.blocks = BedTool.from_dataframe(self.df)
 
 
-def validateSegmentationArguments(input_ccf, p0, prior):
-    # Check that input_ccf is sorted
-    assert utilities.isSortedBEDObject(input_ccf), "input CCF file must be sorted"
+def validateSegmentationArguments(input_file, p0, prior):
+    # Check that input_file is sorted
+    assert utilities.isSortedBEDObject(input_file), "input CCF file must be sorted"
     # If prior has been provided, check that it is positive
     if prior:
         assert prior >= 0, "--prior should be non-negative"
@@ -72,10 +72,10 @@ def blocksToDF(chrom, ranges):
 
 # Wrapper for segmenting; calls segmentCCF()
 # Returns a SegmentationRecord object
-def segment(input_ccf, method, p0=None, prior=None):
-    # input_ccf is a BedTool object
+def segment(input_file, method, p0=None, prior=None):
+    # input_file is a BedTool object
     # Validate segmentation arguments
-    validateSegmentationArguments(input_ccf, p0, prior)
+    validateSegmentationArguments(input_file, p0, prior)
     # Get the algorithm class, then instantiate with specified parameters
     algorithm = algorithms.ALGORITHM_DICT.get(method, method)
     if prior:
@@ -86,7 +86,7 @@ def segment(input_ccf, method, p0=None, prior=None):
         raise ValueError("--p0 or --prior argument are invalid")
 
     # Open input file as DataFrame
-    input_df = input_ccf.to_dataframe()
+    input_df = input_file.to_dataframe()
     # Pre-process coordinates by taking the floor of the mean of the start and end values
     input_df["coordinate"] = (input_df["start"] + input_df["end"]) // 2
     # Get list of chromosomes specified in input_df
@@ -129,6 +129,6 @@ def segment(input_ccf, method, p0=None, prior=None):
 # Segment a genomic CCF file from the command line
 # Thin wrapper for segment()
 def segment_from_command_line(args):
-    input_ccf = BedTool(args.input)
+    input_file = BedTool(args.input)
     # Segment the input file
-    return segment(input_ccf, args.method, p0=args.p0, prior=args.prior)
+    return segment(input_file, args.method, p0=args.p0, prior=args.prior)
