@@ -166,11 +166,11 @@ def annotate(
 
     # Pull region edges to the nearest event in input, if specified
     if tight:
-        data = regions_bed.intersect(input_file, wa=True, wb=True)
+        data = regions_bed.intersect(input_file, wa=True, wb=True, sorted=True)
         regions_bed = tighten(data)
 
     # Intersect regions with the input file
-    data = regions_bed.intersect(input_file, c=True).intersect(background_file, c=True)
+    data = regions_bed.intersect(input_file, c=True, sorted=True).intersect(background_file, c=True, sorted=True)
     # Convert to DataFrame
     df = data.to_dataframe()
     df = df.rename(index=str, columns={"name": "Input", "score": "Background"})
