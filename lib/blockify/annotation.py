@@ -17,9 +17,9 @@ CORRECTION_METHODS = [method for sublist in multitest._alias_list for method in 
 
 
 def validateAnnotationArguments(
-    input_ccf,
+    input_file,
     regions_bed,
-    background_ccf,
+    background_file,
     alpha,
     correction,
     p_value,
@@ -28,14 +28,14 @@ def validateAnnotationArguments(
     max_size,
     pseudocount,
 ):
-    # Check that the input CCF file is sorted
-    assert utilities.isSortedBEDObject(input_ccf), "input CCF file must be sorted"
+    # Check that the input file is sorted
+    assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # Check that regions_bed is sorted
     assert utilities.isSortedBEDObject(regions_bed), "regions BED file must be sorted"
-    # Check that background_ccf is sorted
+    # Check that background_file is sorted
     assert utilities.isSortedBEDObject(
-        background_ccf
-    ), "background CCF file must be sorted"
+        background_file
+    ), "background file must be sorted"
 
     # If regions has been supplied, check that they are also sorted
     if regions_bed:
@@ -132,9 +132,9 @@ def sizeFilter(bed, min_size, max_size):
 
 
 def annotate(
-    input_ccf,
+    input_file,
     regions_bed,
-    background_ccf,
+    background_file,
     measurement,
     intermediate=None,
     alpha=None,
@@ -147,12 +147,12 @@ def annotate(
     tight=False,
     summit=False,
 ):
-    # input_ccf, regions, and background_ccf are BedTool objects
+    # input_file, regions, and background_file are BedTool objects
     # Validate annotation arguments
     validateAnnotationArguments(
-        input_ccf,
+        input_file,
         regions_bed,
-        background_ccf,
+        background_file,
         alpha,
         correction,
         p_value,
@@ -162,15 +162,15 @@ def annotate(
         pseudocount,
     )
     # Calculate scaling factor
-    scalingFactor = len(input_ccf.to_dataframe()) / len(background_ccf.to_dataframe())
+    scalingFactor = len(input_file.to_dataframe()) / len(background_file.to_dataframe())
 
     # Pull region edges to the nearest event in input, if specified
     if tight:
-        data = regions_bed.intersect(input_ccf, wa=True, wb=True)
+        data = regions_bed.intersect(input_file, wa=True, wb=True)
         regions_bed = tighten(data)
 
     # Intersect regions with the input file
-    data = regions_bed.intersect(input_ccf, c=True).intersect(background_ccf, c=True)
+    data = regions_bed.intersect(input_file, c=True).intersect(background_file, c=True)
     # Convert to DataFrame
     df = data.to_dataframe()
     df = df.rename(index=str, columns={"name": "Input", "score": "Background"})
@@ -257,7 +257,7 @@ def annotate_from_command_line(args):
     # If regions has been supplied, use it;
     if args.regions:
         regions_bed = BedTool(args.regions)
-    # otherwise, segment the CCF
+    # otherwise, segment the file
     else:
         region_segmentation = segmentation.segment(
             input_file, args.method, p0=args.p0, prior=args.prior

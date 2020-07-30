@@ -3,7 +3,7 @@ from . import segmentation
 from . import utilities
 import warnings
 
-# Generates a normalized bedgraph of event rate for qBED formatted genomic data.
+# Generates a normalized bedgraph of event rate for BED-formatted genomic data.
 # The output file can be visualized on genome browsers.
 
 # Suppress certain warnings
@@ -12,8 +12,8 @@ warnings.simplefilter("ignore", category=ResourceWarning)
 
 
 def validateNormalizationArguments(input_file, regions_bed, libraryFactor, lengthFactor):
-    # Check that the input CCF file is sorted
-    assert utilities.isSortedBEDObject(input_file), "input CCF file must be sorted"
+    # Check that the input file is sorted
+    assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # Check that regions is also sorted
     assert utilities.isSortedBEDObject(regions_bed), "regions BED file must be sorted"
     # Check libraryFactor
@@ -28,7 +28,7 @@ def normalize(input_file, regions_bed, libraryFactor, lengthFactor):
     # Calculate library scaling constant, which is the total number
     # Validate normalization arguments
     validateNormalizationArguments(input_file, regions_bed, libraryFactor, lengthFactor)
-    # of events in inputBED divided by the library factor
+    # of events in input BED divided by the library factor
     library_scaling_constant = len(input_file.to_dataframe()) / libraryFactor
 
     # For each interval in regions, count the number of events;
@@ -55,14 +55,14 @@ def normalize(input_file, regions_bed, libraryFactor, lengthFactor):
         )
 
 
-# Normalize the rate of events in a CCF file over a set of regions
+# Normalize the rate of events in a file over a set of regions
 # Thin wrapper for normalize()
 def normalize_from_command_line(args):
     input_file = BedTool(args.input)
     # If regions has been supplied, use it;
     if args.regions:
         regions_bed = BedTool(args.regions)
-    # otherwise, segment the CCF
+    # otherwise, segment the file
     else:
         region_segmentation = segmentation.segment(
             input_file, args.method, p0=args.p0, prior=args.prior

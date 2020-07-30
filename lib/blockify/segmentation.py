@@ -46,7 +46,7 @@ class SegmentationRecord(object):
 
 def validateSegmentationArguments(input_file, p0, prior):
     # Check that input_file is sorted
-    assert utilities.isSortedBEDObject(input_file), "input CCF file must be sorted"
+    assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # If prior has been provided, check that it is positive
     if prior:
         assert prior >= 0, "--prior should be non-negative"
@@ -70,7 +70,6 @@ def blocksToDF(chrom, ranges):
         return pd.DataFrame()
 
 
-# Wrapper for segmenting; calls segmentCCF()
 # Returns a SegmentationRecord object
 def segment(input_file, method, p0=None, prior=None):
     # input_file is a BedTool object
@@ -126,7 +125,7 @@ def segment(input_file, method, p0=None, prior=None):
     return segmentation
 
 
-# Segment a genomic CCF file from the command line
+# Segment a genomic BED/qBED file from the command line
 # Thin wrapper for segment()
 def segment_from_command_line(args):
     input_file = BedTool(args.input)

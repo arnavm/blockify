@@ -236,5 +236,5 @@ downsample.add_argument(
     "--output",
     required=False,
     default=sys.stdout,
-    help="Output file (CCF format); default: stdout"
+    help="Output file (BED/qBED format); default: stdout"
 )

@@ -21,7 +21,7 @@ def downsample(input_file, n, seed=None, naive=False):
     return BedTool.from_dataframe(downsampled_file)
 
 
-# Downsample a CCF file from the command line
+# Downsample a qBED file from the command line
 # Thin wrapper for downsample()
 def downsample_from_command_line(args):
     input_file = pd.read_table(args.input, header=None)
