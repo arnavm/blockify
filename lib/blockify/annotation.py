@@ -125,7 +125,7 @@ def sizeFilter(bed, min_size, max_size):
     df = df[df["size"] <= max_size]
     df = df[df["size"] >= min_size]
     # Also set columns for name, score, and strand
-    df["name"] = df.index
+    df["name"] = "peak_" + df.index.astype(str)
     df["score"] = 1
     df["strand"] = "."
     return BedTool.from_dataframe(df[["chrom", "start", "end", "name", "score", "strand"]])
