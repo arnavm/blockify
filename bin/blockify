@@ -13,26 +13,32 @@ if not sys.warnoptions:
     warnings.simplefilter("ignore")
 
 
+def writeTSV(df, output):
+    df.to_csv(output, sep='\t', index=None, header=None)
+
+
 def run():
     args = blockify_parser.parse_args()
     if args.command == "segment":
         result = segmentation.segment_from_command_line(args)
         # result is a SegmentationResult object
-        result.df.to_csv(args.output, sep="\t", index=None, header=None)
+        writeTSV(result.df, args.output)
     elif args.command == "normalize":
         result = normalization.normalize_from_command_line(args)
         # result is a BedTool object
-        result.saveas(args.output)
+        # result.saveas(args.output)
+        writeTSV(result.to_dataframe(), args.output)
     elif args.command == "call":
         result, intermediate = annotation.annotate_from_command_line(args)
         # result is a BedTool object
-        result.saveas(args.output)
+        writeTSV(result.to_dataframe(), args.output)
+        # args.intermediate is either None or a pandas DataFrame
         if args.intermediate:
             intermediate.to_csv(args.intermediate)
     elif args.command == "downsample":
         result = downsampling.downsample_from_command_line(args)
         # result is a BedTool object
-        result.saveas(args.output)
+        writeTSV(result.to_dataframe(), args.output)
     else:
         blockify_parser.print_help(sys.stderr)
         sys.exit(1)
