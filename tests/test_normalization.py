@@ -3,6 +3,7 @@ from blockify.parsers import DEFAULT_NORMALIZATION_LIBRARY_FACTOR, DEFAULT_NORMA
 import blockify.normalization as normalization
 import blockify.segmentation as segmentation
 import gzip
+import os
 from pybedtools import BedTool
 import sys
 import unittest
@@ -11,7 +12,6 @@ import urllib.request
 
 # Enable warnings
 if not sys.warnoptions:
-    import os
     import warnings
     warnings.simplefilter("default") # Change the filter in this process
     os.environ["PYTHONWARNINGS"] = "default" # Also affect subprocesses
