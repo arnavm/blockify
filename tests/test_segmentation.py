@@ -4,7 +4,6 @@ import blockify.segmentation as segmentation
 import gzip
 import os
 from pybedtools import BedTool
-import shutil
 import re
 import sys
 import unittest
@@ -13,7 +12,6 @@ import urllib.request
 
 # Enable warnings (see https://docs.python.org/3/library/warnings.html#overriding-the-default-filter)
 if not sys.warnoptions:
-    import os
     import warnings
     warnings.simplefilter("default") # Change the filter in this process
     os.environ["PYTHONWARNINGS"] = "default" # Also affect subprocesses
@@ -29,7 +27,6 @@ class TestSegmentation(unittest.TestCase):
                 "segment",
                 "--input",
                 "HCT-116_PBase.ccf",
-                # "test.bed"
             ]
         )
         result = segmentation.segment_from_command_line(args)
@@ -46,7 +43,6 @@ class TestSegmentation(unittest.TestCase):
                 "segment",
                 "--input",
                 "HCT-116_SP1-PBase.ccf",
-                # "test.bed",
             ]
         )
         result = segmentation.segment_from_command_line(args)
@@ -63,7 +59,6 @@ class TestSegmentation(unittest.TestCase):
                 "segment",
                 "--input",
                 "HCT-116_HyPBase.ccf",
-                # "test.bed",
             ]
         )
         result = segmentation.segment_from_command_line(args)
@@ -80,7 +75,6 @@ class TestSegmentation(unittest.TestCase):
                 "segment",
                 "--input",
                 "HCT-116_SP1-HyPBase.ccf",
-                # "test.bed",
             ]
         )
         result = segmentation.segment_from_command_line(args)
@@ -197,7 +191,6 @@ class TestSegmentation(unittest.TestCase):
                 "segment",
                 "--input",
                 "uniform_test.ccf",
-                # "test.bed"
             ]
         )
         result = segmentation.segment_from_command_line(args)
@@ -216,7 +209,6 @@ class TestSegmentation(unittest.TestCase):
                 "HCT-116_PBase.ccf",
                 "--method",
                 "OP",
-                # "test.bed",
             ]
         )
         result_OP = segmentation.segment_from_command_line(args_OP)
@@ -227,7 +219,6 @@ class TestSegmentation(unittest.TestCase):
                 "HCT-116_PBase.ccf",
                 "--method",
                 "PELT",
-                # "test.bed",
             ]
         )
         result_PELT = segmentation.segment_from_command_line(args_PELT)
@@ -249,7 +240,6 @@ class TestSegmentationParameters(unittest.TestCase):
                 "HCT-116_PBase.ccf",
                 "--p0",
                 "2",
-                # "test.bed",
             ]
         )
         with self.assertRaises(AssertionError):
@@ -267,7 +257,6 @@ class TestSegmentationParameters(unittest.TestCase):
                 "HCT-116_PBase.ccf",
                 "--prior",
                 "-1",
-                # "test.bed",
             ]
         )
         with self.assertRaises(AssertionError):
