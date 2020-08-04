@@ -44,8 +44,8 @@ regions_parser.add_argument(
 # Segmentation sub-command
 segment = subcommands.add_parser(
     name="segment",
-    description="Segment a qBED file using Bayesian blocks",
-    help="Segment a qBED file using Bayesian blocks",
+    description="Segment a BED/qBED file using Bayesian blocks",
+    help="Segment a BED/qBED file using Bayesian blocks",
     parents=[input_parser],
 )
 segment.add_argument(
