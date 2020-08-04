@@ -20,6 +20,7 @@ def validateAnnotationArguments(
     input_file,
     regions_bed,
     background_file,
+    measure,
     alpha,
     correction,
     p_value,
@@ -36,7 +37,8 @@ def validateAnnotationArguments(
     assert utilities.isSortedBEDObject(
         background_file
     ), "background file must be sorted"
-
+    # Check that measure is a valid parameter
+    assert measure in ["enrichment", "depletion"], "measurement must be either 'enrichment' or 'depletion'"
     # If regions has been supplied, check that they are also sorted
     if regions_bed:
         assert utilities.isSortedBEDFile(regions_bed), "regions BED file must be sorted"
@@ -135,7 +137,7 @@ def annotate(
     input_file,
     regions_bed,
     background_file,
-    measurement,
+    measure="enrichment",
     intermediate=None,
     alpha=None,
     p_value=None,
@@ -153,6 +155,7 @@ def annotate(
         input_file,
         regions_bed,
         background_file,
+        measure,
         alpha,
         correction,
         p_value,
@@ -186,13 +189,13 @@ def annotate(
     # Calculate density of insertions in each block
     df["Net_density"] = (df["Input"] - df["Normed_bg"]) / (df["end"] - df["start"])
 
-    if measurement == "enrichment":
+    if measure == "enrichment":
         # Calculate the one-tail Poisson p-value of observing Input or more number of events
         # given a lambda of Normed_bg. Use the survival function (sf), which is 1 - CDF.
         # Need to specify Input - 1 because for discrete distributions, 1 - cdf(x) is p(X ≥ x + 1);
         # sf(x - 1) is thus p(X ≥ x).
         df["pValue"] = stats.poisson.sf(df["Input"] - 1, df["Normed_bg"])
-    elif measurement == "depletion":
+    elif measure == "depletion":
         # Calculate the one-tail Poisson p-value of observing Input or fewer number of events
         # given a lambda of Normed_bg. Use the cumulative distribution function (cdf).
         # cdf(x) is  p(X ≤ x).
@@ -269,7 +272,7 @@ def annotate_from_command_line(args):
         input_file,
         regions_bed,
         background_file,
-        measurement=args.measure,
+        measure=args.measure,
         intermediate=args.intermediate,
         alpha=args.alpha,
         p_value=args.pValueCutoff,
