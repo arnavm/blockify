@@ -19,8 +19,7 @@ basic_tests = unittest.TestSuite()
 loader = unittest.TestLoader()
 
 # Add segmentation tests
-basic_tests.addTest(test_segmentation.TestSegmentation("test_PBase"))
-basic_tests.addTest(test_segmentation.TestSegmentation("test_SP1_PBase"))
+basic_tests.addTest(test_segmentation.TestSegmentation("test_yeast"))
 basic_tests.addTest(test_segmentation.TestSegmentation("test_uniformity"))
 basic_tests.addTests(
     loader.loadTestsFromTestCase(test_segmentation.TestSegmentationParameters)
@@ -30,8 +29,7 @@ basic_tests.addTests(
 )
 
 # Add normalization tests
-basic_tests.addTest(test_normalization.TestNormalization("test_PBase"))
-basic_tests.addTest(test_normalization.TestNormalization("test_SP1_PBase"))
+basic_tests.addTest(test_normalization.TestNormalization("test_yeast"))
 basic_tests.addTests(
     loader.loadTestsFromTestCase(test_normalization.TestNormalizationParameters)
 )
@@ -40,8 +38,7 @@ basic_tests.addTests(
 )
 
 # Add annotation (peak calling) tests
-basic_tests.addTest(test_annotation.TestAnnotation("test_PBase"))
-basic_tests.addTest(test_annotation.TestAnnotation("test_SP1_PBase"))
+basic_tests.addTest(test_annotation.TestAnnotation("test_yeast"))
 basic_tests.addTests(
     loader.loadTestsFromTestCase(test_annotation.TestAnnotationParameters)
 )

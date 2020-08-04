@@ -14,10 +14,10 @@ if not sys.warnoptions:
 
 class TestUtilities(unittest.TestCase):
     def test_sorted(self):
-        self.assertTrue(utilities.isSortedBEDObject(BedTool("data/test_uniform_sorted.qbed")))
+        self.assertTrue(utilities.isSortedBEDObject(BedTool("tests/data/test_uniform_sorted.qbed")))
 
     def test_unsorted(self):
-        self.assertFalse(utilities.isSortedBEDObject(BedTool("data/test_uniform_unsorted.qbed")))
+        self.assertFalse(utilities.isSortedBEDObject(BedTool("tests/data/test_uniform_unsorted.qbed")))
 
 
 if __name__ == "__main__":

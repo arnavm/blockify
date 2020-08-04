@@ -1,11 +1,9 @@
 from blockify.parsers import blockify_parser
 import blockify.downsampling as downsampling
-import gzip
 import os
 import pandas as pd
 import sys
 import unittest
-import urllib.request
 
 
 # Enable warnings (see https://docs.python.org/3/library/warnings.html#overriding-the-default-filter)
@@ -16,15 +14,12 @@ if not sys.warnoptions:
 
 
 class TestDownsampling(unittest.TestCase):
-    def test_PBase_normal(self):
-        PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471636&format=file&file=GSM4471636%5FHCT%2D116%5FPBase%2Eccf%2Etxt%2Egz"
-        with urllib.request.urlopen(PBase_url) as response, open("HCT-116_PBase.ccf", 'wb') as out_file:
-            out_file.write(gzip.decompress(response.read()))
+    def test_yeast_normal(self):
         args = blockify_parser.parse_args(
             [
                 "downsample",
                 "--input",
-                "HCT-116_PBase.ccf",
+                "tests/data/S288C_dSIR4.qbed",
                 "-n",
                 "10000",
                 "--seed",
@@ -32,18 +27,14 @@ class TestDownsampling(unittest.TestCase):
             ]
         )
         result = downsampling.downsample_from_command_line(args)
-        os.remove("HCT-116_PBase.ccf")
-        self.assertEqual(result.to_dataframe()["start"][0], 900198)
+        self.assertEqual(result.to_dataframe()["start"][0], 2091)
 
-    def test_PBase_naive(self):
-        PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471636&format=file&file=GSM4471636%5FHCT%2D116%5FPBase%2Eccf%2Etxt%2Egz"
-        with urllib.request.urlopen(PBase_url) as response, open("HCT-116_PBase.ccf", 'wb') as out_file:
-            out_file.write(gzip.decompress(response.read()))
+    def test_yeast_naive(self):
         args = blockify_parser.parse_args(
             [
                 "downsample",
                 "--input",
-                "HCT-116_PBase.ccf",
+                "tests/data/S288C_dSIR4.qbed",
                 "-n",
                 "10000",
                 "--seed",
@@ -52,36 +43,27 @@ class TestDownsampling(unittest.TestCase):
             ]
         )
         result = downsampling.downsample_from_command_line(args)
-        os.remove("HCT-116_PBase.ccf")
-        self.assertEqual(result.to_dataframe()["start"][0], 845648)
+        self.assertEqual(result.to_dataframe()["start"][0], 2118)
 
 
 class TestDownsamplingAPI(unittest.TestCase):
     def test_downsampling_API_normal(self):
-        PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471636&format=file&file=GSM4471636%5FHCT%2D116%5FPBase%2Eccf%2Etxt%2Egz"
-        with urllib.request.urlopen(PBase_url) as response, open("HCT-116_PBase.ccf", 'wb') as out_file:
-            out_file.write(gzip.decompress(response.read()))
         result = downsampling.downsample(
-            pd.read_table("HCT-116_PBase.ccf", header=None),
+            pd.read_table("tests/data/S288C_dSIR4.qbed", header=None),
             10000,
             seed=0,
             naive=False
         )
-        self.assertEqual(result.to_dataframe()["start"][0], 900198)
-        os.remove("HCT-116_PBase.ccf")
+        self.assertEqual(result.to_dataframe()["start"][0], 2091)
 
     def test_downsampling_API_naive(self):
-        PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471636&format=file&file=GSM4471636%5FHCT%2D116%5FPBase%2Eccf%2Etxt%2Egz"
-        with urllib.request.urlopen(PBase_url) as response, open("HCT-116_PBase.ccf", 'wb') as out_file:
-            out_file.write(gzip.decompress(response.read()))
         result = downsampling.downsample(
-            pd.read_table("HCT-116_PBase.ccf", header=None),
+            pd.read_table("tests/data/S288C_dSIR4.qbed", header=None),
             10000,
             seed=0,
             naive=True
         )
-        self.assertEqual(result.to_dataframe()["start"][0], 845648)
-        os.remove("HCT-116_PBase.ccf")
+        self.assertEqual(result.to_dataframe()["start"][0], 2118)
 
 
 if __name__ == "__main__":
