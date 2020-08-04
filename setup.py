@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="blockify", # Replace with your own username
-    version="0.1.2",
+    version="0.2.0",
     author="Arnav Moudgil",
     author_email="amoudgil@wustl.edu",
     description="Fast and optimal genome segmentation with Bayesian blocks",
