@@ -1,6 +1,7 @@
 # blockify
 [![Build Status](https://travis-ci.org/arnavm/blockify.svg?branch=dev)](https://travis-ci.org/arnavm/blockify
 )
+
 Fast, mathematically optimal genome segmentation with Bayesian blocks
 
 ## Installation
