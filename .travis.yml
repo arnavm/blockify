@@ -13,5 +13,4 @@ addons:
 install:
     - pip install blockify
 script:
-    - pytest tests/test_basic.py
-    #- python -m unittest tests.test_basic
+    - python -m unittest tests.test_basic
