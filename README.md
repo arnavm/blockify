@@ -1,4 +1,4 @@
-# blockify
+<!--# blockify-->
 [![Build Status](https://travis-ci.org/arnavm/blockify.svg?branch=dev)](https://travis-ci.org/arnavm/blockify
 )
 [![Documentation Status](https://readthedocs.org/projects/blockify/badge/?version=latest)](https://blockify.readthedocs.io/en/latest/?badge=latest)
