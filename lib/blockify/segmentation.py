@@ -13,8 +13,7 @@ warnings.simplefilter("ignore", category=ResourceWarning)
 
 
 class SegmentationRecord(object):
-    """A class to store Bayesian block segmentation, to facilitate
-    passing segmentations between modules."""
+    """A class to store a single Bayesian block genomic segmentation."""
     def __init__(self):
         # # File to be segmented
         # self.filename = None
@@ -58,7 +57,7 @@ def validateSegmentationArguments(input_file, p0, prior):
 
 
 def blocksToDF(chrom, ranges):
-    """Convert a set of contiguous Bayesian blocks to DataFrame format"""
+    """Convert a set of contiguous Bayesian blocks to ``pandas`` DataFrame format"""
     output = ""
     # Chromosomes need at least two events at different positions
     # to be able to report a block. If output is empty,
@@ -89,7 +88,8 @@ def segment(input_file, method, p0=None, prior=None):
 
     Returns
     -------
-    SegmentationRecord
+    segmentation: SegmentationRecord
+        A SegmentationRecord from segmenting the provided data
     """
 
     # input_file is a BedTool object
@@ -145,9 +145,8 @@ def segment(input_file, method, p0=None, prior=None):
     return segmentation
 
 
-# Segment a genomic BED/qBED file from the command line
-# Thin wrapper for segment()
 def segment_from_command_line(args):
+    """Wrapper function for the command line function ``blockify segment``"""
     input_file = BedTool(args.input)
     # Segment the input file
     return segment(input_file, args.method, p0=args.p0, prior=args.prior)

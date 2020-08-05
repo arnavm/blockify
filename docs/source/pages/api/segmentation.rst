@@ -1,7 +1,5 @@
-API: blockify.segmentation
+API: Segmentation
 ==========================
 
-.. automodule:: blockify.segmentation.SegmentationRecord
+.. automodule:: blockify.segmentation
     :members:
-
-.. autofunction:: blockify.segmentation.segment
