@@ -27,7 +27,7 @@ class TestSegmentation(unittest.TestCase):
         )
         result = segmentation.segment_from_command_line(args)
         self.assertEqual(result.total_blocks, 1408)
-        self.assertEqual(result.total_fitness, 99777.41540439503)
+        self.assertAlmostEqual(result.total_fitness, 99777.41540439503)
 
     def test_PBase(self):
         PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471636&format=file&file=GSM4471636%5FHCT%2D116%5FPBase%2Eccf%2Etxt%2Egz"
@@ -43,7 +43,7 @@ class TestSegmentation(unittest.TestCase):
         result = segmentation.segment_from_command_line(args)
         os.remove("tests/data/HCT-116_PBase.ccf")
         self.assertEqual(result.total_blocks, 30172)
-        self.assertEqual(result.total_fitness, 10271168.936047826)
+        self.assertAlmostEqual(result.total_fitness, 10271168.936047826)
 
     def test_SP1_PBase(self):
         SP1_PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471637&format=file&file=GSM4471637%5FHCT%2D116%5FSP1%2DPBase%2Eccf%2Etxt%2Egz"
@@ -59,7 +59,7 @@ class TestSegmentation(unittest.TestCase):
         result = segmentation.segment_from_command_line(args)
         os.remove("tests/data/HCT-116_SP1-PBase.ccf")
         self.assertEqual(result.total_blocks, 21375)
-        self.assertEqual(result.total_fitness, 2987508.577343301)
+        self.assertAlmostEqual(result.total_fitness, 2987508.577343301)
 
     def test_HyPBase(self):
         HyPBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471638&format=file&file=GSM4471638%5FHCT%2D116%5FHyPBase%2Eccf%2Etxt%2Egz"
@@ -75,7 +75,7 @@ class TestSegmentation(unittest.TestCase):
         result = segmentation.segment_from_command_line(args)
         os.remove("tests/data/HCT-116_HyPBase.ccf")
         self.assertEqual(result.total_blocks, 106211)
-        self.assertEqual(result.total_fitness, 31079910.017576993)
+        self.assertAlmostEqual(result.total_fitness, 31079910.017576993)
 
     def test_SP1_HyPBase(self):
         SP1_HyPBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471639&format=file&file=GSM4471639%5FHCT%2D116%5FSP1%2DHyPBase%2Eccf%2Etxt%2Egz"
@@ -91,7 +91,7 @@ class TestSegmentation(unittest.TestCase):
         result = segmentation.segment_from_command_line(args)
         os.remove("tests/data/HCT-116_SP1-HyPBase.ccf")
         self.assertEqual(result.total_blocks, 68935)
-        self.assertEqual(result.total_fitness, 11410811.054755056)
+        self.assertAlmostEqual(result.total_fitness, 11410811.054755056)
 
     def test_uniformity(self):
         # Test that the algorithm segments a truly uniform dataset into a single block
@@ -169,7 +169,7 @@ class TestSegmentationAPI(unittest.TestCase):
             prior=None
         )
         self.assertEqual(result.total_blocks, 1408)
-        self.assertEqual(result.total_fitness, 99777.41540439503)
+        self.assertAlmostEqual(result.total_fitness, 99777.41540439503)
 
 
 if __name__ == "__main__":
