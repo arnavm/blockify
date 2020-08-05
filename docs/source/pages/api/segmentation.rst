@@ -1,4 +1,4 @@
-API: Segmentation
+API: segmentation
 ==========================
 
 .. automodule:: blockify.segmentation

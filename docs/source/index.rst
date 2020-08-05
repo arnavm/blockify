@@ -11,6 +11,9 @@ Welcome to blockify's documentation!
    pages/commands/normalize
    pages/commands/downsample
    pages/api/segmentation
+   pages/api/annotation
+   pages/api/normalization
+   pages/api/downsampling
 
 
 

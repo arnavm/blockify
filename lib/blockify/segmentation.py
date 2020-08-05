@@ -82,7 +82,7 @@ def segment(input_file, method, p0=None, prior=None):
     method: str
         String specifying whether to use OP or PELT for the segmentation
     p0: float, optional
-        Float used to parameterize the prior on the total number of blocks; must be in the interval [0, 1]
+        Float used to parameterize the prior on the total number of blocks; must be in the interval [0, 1]. Default: 0.05
     prior: float, optional
         Explicit value for the total number of priors (specifying this is not recommended)
 
