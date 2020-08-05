@@ -5,7 +5,13 @@ python:
     - "3.6"
     - "3.7"
     - "3.8"
+addons:
+  apt:
+    packages: bedtools
+  homebrew:
+    packages: bedtools
 install:
     - pip install blockify
 script:
-    - python -m unittest tests.test_basic
+    - pytest tests/test_basic.py
+    #- python -m unittest tests.test_basic
