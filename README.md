@@ -26,7 +26,7 @@ from blockify import downsampling
 To use from the command line:
 `blockify -h`
 
-For more details, please see the documentation.
+For more details, please see the [documentation](https://blockify.rtfd.io).
 
 ### Development
 
