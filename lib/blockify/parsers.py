@@ -28,7 +28,7 @@ input_parser.add_argument(
     "-i",
     "--input",
     required=True,
-    help="Input qBED file"
+    help="Input file"
 )
 regions_parser = argparse.ArgumentParser(
     add_help=False,
@@ -59,7 +59,7 @@ prior_group = segment.add_mutually_exclusive_group(
     required=False
 )
 prior_group.add_argument(
-    "--prior", type=float, help="Explicit prior on the number of blocks"
+    "--prior", type=float, help="Explicit prior on the number of blocks (not recommended for general use)"
 )
 prior_group.add_argument(
     "--p0",

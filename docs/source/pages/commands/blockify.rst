@@ -1,9 +1,9 @@
-Command: segment
-================
+blockify
+========
 
 .. argparse::
    :module: blockify.parsers
    :func: blockify_parser
    :prog: blockify
-   :path: segment
    :nodefault:
+   :nosubcommands:
