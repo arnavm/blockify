@@ -29,6 +29,38 @@ def validateAnnotationArguments(
     max_size,
     pseudocount,
 ):
+    """Validates parameters passed via the command line.
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    regions_bed: BedTool object
+        BedTool object (instantiated from pybedtools) for regions over which we are annotation/calling peaks
+    background_file: BedTool object
+        BedTool object (instantiated from pybedtools) used to parameterize the background model
+    measure: str
+        Either "enrichment" or "depletion" to indicate which direction of effect to test for
+    alpha: float or None
+        Multiple-hypothesis adjusted threshold for calling significance
+    correction: str or None
+        Multiple hypothesis correction to perform (see ``statsmodels.stats.multitest`` for valid values)
+    p_value: float or None
+        Straight p-value cutoff (unadjusted) for calling significance
+    distance: int or None
+        Merge significant features within specified distance cutoff
+    min_size: int or None
+        Minimum size cutoff for peaks
+    max_size: int or None
+        Maximum size cutoff for peaks
+    pseudocount: float
+        Pseudocount added to adjust background model
+
+    Returns
+    -------
+    None: None
+    """
+
     # Check that the input file is sorted
     assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # Check that regions_bed is sorted
@@ -64,6 +96,19 @@ def validateAnnotationArguments(
 
 
 def tighten(data):
+    """Tightens block boundaries in a BedTool file. This function modifies block boundaries so that they coincide with data points.
+
+    Parameters
+    ----------
+    data: BedTool object
+        Input file of block boundaries
+
+    Returns
+    -------
+    refined: BedTool object
+        BedTool of tightened blocks
+    """
+
     # data is a BedTool; return value is also BedTool
     # Calculate new boundaries based on first and last event locations in the region
     df = data.to_dataframe()
@@ -84,6 +129,19 @@ def tighten(data):
 
 
 def parcelConsecutiveBlocks(df):
+    """Concatenates consecutive blocks into a DataFrame. If there are multiple non-contiguous sets of consecutive blocks, creates one DataFrame per set.
+
+    Parameters
+    ----------
+    df: ``pandas`` DataFrame
+        Input set of blocks as a DataFrame
+
+    Returns
+    -------
+    outlist: list of ``pandas`` DataFrames
+        List of DataFrames, each of which is a set of consecutive blocks
+    """
+
     # df is a pandas DataFrame; return value is a list of
     # DataFrames, each of which contains consecutive blocks
     outlist = []
@@ -107,6 +165,21 @@ def parcelConsecutiveBlocks(df):
 
 
 def getPeakSummits(df, metric="pValue"):
+    """From a list of peaks, get a set of peak summits
+
+    Parameters
+    ----------
+    df: ``pandas`` DataFrame
+        Set of peaks from ``annotate`` as a DataFrame
+    metric: str
+        Metric to use when filtering for summits. One of "pValue" or "density"
+
+    Returns
+    -------
+    summits: ``pandas`` DataFrame
+        Set of peak summits as a DataFrame
+    """
+
     # df is a pandas DataFrame; return value is also a DataFrame
     assert metric in ["pValue", "density"]
     if metric == "pValue":
@@ -121,6 +194,23 @@ def getPeakSummits(df, metric="pValue"):
 
 
 def sizeFilter(bed, min_size, max_size):
+    """Filter peaks by size.
+
+    Parameters
+    ----------
+    bed: BedTool object
+        Input data file
+    min_size: int
+        Lower bound for peak size
+    max_size: int
+        Upper bound for peak size
+
+    Returns
+    -------
+    filtered_peaks: BedTool object
+        Peaks after size selection
+    """
+
     # For size filter, convert to DataFrame, filter, and go back to BED
     df = bed.to_dataframe()
     df["size"] = df["end"] - df["start"]
@@ -140,8 +230,8 @@ def annotate(
     measure="enrichment",
     intermediate=None,
     alpha=None,
-    p_value=None,
     correction=None,
+    p_value=None,
     distance=None,
     min_size=None,
     max_size=None,
@@ -149,6 +239,47 @@ def annotate(
     tight=False,
     summit=False,
 ):
+    """Core annotation and peak calling method.
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    regions_bed: BedTool object
+        BedTool object (instantiated from pybedtools) for regions over which we are annotation/calling peaks
+    background_file: BedTool object
+        BedTool object (instantiated from pybedtools) used to parameterize the background model
+    measure: str
+        Either "enrichment" or "depletion" to indicate which direction of effect to test for
+    intermediate: bool
+        Whether or not to return intermediate calculations during peak calling
+    alpha: float or None
+        Multiple-hypothesis adjusted threshold for calling significance
+    correction: str or None
+        Multiple hypothesis correction to perform (see ``statsmodels.stats.multitest`` for valid values)
+    p_value: float or None
+        Straight p-value cutoff (unadjusted) for calling significance
+    distance: int or None
+        Merge significant features within specified distance cutoff
+    min_size: int or None
+        Minimum size cutoff for peaks
+    max_size: int or None
+        Maximum size cutoff for peaks
+    pseudocount: float
+        Pseudocount added to adjust background model
+    tight: bool
+        Whether to tighten the regions in ``regions_bed``
+    summit: bool
+        Whether to return peak summits instead of full peaks
+
+    Returns
+    -------
+    out_bed: BedTool object
+        Set of peaks in BED6 format
+    df: ``pandas`` DataFrame or None
+        If ``intermediate`` specified, DataFrame containing intermediate calculations during peak calling
+    """
+
     # input_file, regions, and background_file are BedTool objects
     # Validate annotation arguments
     validateAnnotationArguments(
@@ -256,6 +387,21 @@ def annotate(
 
 
 def annotate_from_command_line(args):
+    """Wrapper function for the command line function ``blockify call``
+
+    Parameters
+    ----------
+    args: ``argparse.Namespace`` object
+        Input from command line
+
+    Returns
+    -------
+    out_bed: BedTool object
+        Set of peaks in BED6 format
+    df: ``pandas`` DataFrame or None
+        If ``intermediate`` specified, DataFrame containing intermediate calculations during peak calling
+    """
+
     input_file = BedTool(args.input)
     # If regions has been supplied, use it;
     if args.regions:

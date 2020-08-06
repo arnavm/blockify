@@ -14,6 +14,7 @@ warnings.simplefilter("ignore", category=ResourceWarning)
 
 class SegmentationRecord(object):
     """A class to store a single Bayesian block genomic segmentation."""
+
     def __init__(self):
         # # File to be segmented
         # self.filename = None
@@ -45,7 +46,20 @@ class SegmentationRecord(object):
 
 
 def validateSegmentationArguments(input_file, p0, prior):
-    """Validates parameters passed via the command line."""
+    """Validates parameters passed via the command line.
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    p0: float
+    prior: float
+
+    Returns
+    -------
+    None: None
+    """
+
     # Check that input_file is sorted
     assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # If prior has been provided, check that it is positive
@@ -57,7 +71,20 @@ def validateSegmentationArguments(input_file, p0, prior):
 
 
 def blocksToDF(chrom, ranges):
-    """Convert a set of contiguous Bayesian blocks to ``pandas`` DataFrame format"""
+    """Convert a set of contiguous Bayesian blocks to ``pandas`` DataFrame format.
+
+    Parameters
+    ----------
+    chrom: str
+        String specifying the chromsome
+    ranges: array
+        Array whose entries specify the coordinates of block boundaries
+
+    Returns
+    -------
+    output: ``pandas`` DataFrame
+    """
+
     output = ""
     # Chromosomes need at least two events at different positions
     # to be able to report a block. If output is empty,
@@ -73,7 +100,7 @@ def blocksToDF(chrom, ranges):
 
 # Returns a SegmentationRecord object
 def segment(input_file, method, p0=None, prior=None):
-    """Primary segmentation method
+    """Core segmentation method.
 
     Parameters
     ----------
@@ -146,7 +173,19 @@ def segment(input_file, method, p0=None, prior=None):
 
 
 def segment_from_command_line(args):
-    """Wrapper function for the command line function ``blockify segment``"""
+    """Wrapper function for the command line function ``blockify segment``
+
+    Parameters
+    ----------
+    args: ``argparse.Namespace`` object
+        Input from command line
+
+    Returns
+    -------
+    segmentation: SegmentationRecord
+        A SegmentationRecord from segmenting the command line data
+    """
+
     input_file = BedTool(args.input)
     # Segment the input file
     return segment(input_file, args.method, p0=args.p0, prior=args.prior)
