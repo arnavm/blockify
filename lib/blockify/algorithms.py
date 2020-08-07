@@ -8,7 +8,7 @@ import numpy as np
 
 
 class Algorithm(object):
-    """Base class for bayesian blocks algorithm functions
+    """Base class for Bayesian blocks algorithm functions
 
     Derived classes should overload the following method:
 

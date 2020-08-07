@@ -1,4 +1,5 @@
 import argparse
+import blockify
 import sys
 
 # Initialize defaults
@@ -14,11 +15,16 @@ blockify_parser = argparse.ArgumentParser(
     description="Genomic peak caller for one-dimensional data",
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
+# Get version
+blockify_parser.add_argument("-v", "--version", action="version",
+                    version="%(prog)s {version}".format(version=blockify.__version__))
+
 # Sub-parsers
 subcommands = blockify_parser.add_subparsers(
     help="Subcommands",
     dest="command"
 )
+
 # Parent parser (shared by sub-parsers)
 input_parser = argparse.ArgumentParser(
     add_help=False,
@@ -28,7 +34,7 @@ input_parser.add_argument(
     "-i",
     "--input",
     required=True,
-    help="Input qBED file"
+    help="Input file"
 )
 regions_parser = argparse.ArgumentParser(
     add_help=False,
@@ -59,7 +65,7 @@ prior_group = segment.add_mutually_exclusive_group(
     required=False
 )
 prior_group.add_argument(
-    "--prior", type=float, help="Explicit prior on the number of blocks"
+    "--prior", type=float, help="Explicit prior on the number of blocks (not recommended for general use)"
 )
 prior_group.add_argument(
     "--p0",

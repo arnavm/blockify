@@ -12,9 +12,9 @@ warnings.simplefilter("ignore", category=FutureWarning)
 warnings.simplefilter("ignore", category=ResourceWarning)
 
 
-# A class to store Bayesian block segmentation, to facilitate
-# passing segmentations between modules.
 class SegmentationRecord(object):
+    """A class to store a single Bayesian block genomic segmentation."""
+
     def __init__(self):
         # # File to be segmented
         # self.filename = None
@@ -38,6 +38,7 @@ class SegmentationRecord(object):
         self.total_fitness = 0
 
     def finalize(self):
+        """Store post hoc summary statistics of the segmentation."""
         self.total_priors = np.sum(list(self.priors.values()))
         self.total_blocks = np.sum(list(self.nblocks.values()))
         self.total_fitness = np.sum(list(self.fitness.values()))
@@ -45,6 +46,20 @@ class SegmentationRecord(object):
 
 
 def validateSegmentationArguments(input_file, p0, prior):
+    """Validates parameters passed via the command line.
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    p0: float
+    prior: float
+
+    Returns
+    -------
+    None: None
+    """
+
     # Check that input_file is sorted
     assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # If prior has been provided, check that it is positive
@@ -55,8 +70,21 @@ def validateSegmentationArguments(input_file, p0, prior):
         assert 0 <= p0 <= 1, "--p0 should be between 0 and 1, inclusive"
 
 
-# Convert a set of continuous Bayesian blocks to DataFrame format
 def blocksToDF(chrom, ranges):
+    """Convert a set of contiguous Bayesian blocks to ``pandas`` DataFrame format.
+
+    Parameters
+    ----------
+    chrom: str
+        String specifying the chromsome
+    ranges: array
+        Array whose entries specify the coordinates of block boundaries
+
+    Returns
+    -------
+    output: ``pandas`` DataFrame
+    """
+
     output = ""
     # Chromosomes need at least two events at different positions
     # to be able to report a block. If output is empty,
@@ -72,6 +100,25 @@ def blocksToDF(chrom, ranges):
 
 # Returns a SegmentationRecord object
 def segment(input_file, method, p0=None, prior=None):
+    """Core segmentation method.
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    method: str
+        String specifying whether to use OP or PELT for the segmentation
+    p0: float, optional
+        Float used to parameterize the prior on the total number of blocks; must be in the interval [0, 1]. Default: 0.05
+    prior: float, optional
+        Explicit value for the total number of priors (specifying this is not recommended)
+
+    Returns
+    -------
+    segmentation: SegmentationRecord
+        A SegmentationRecord from segmenting the provided data
+    """
+
     # input_file is a BedTool object
     # Validate segmentation arguments
     validateSegmentationArguments(input_file, p0, prior)
@@ -125,9 +172,20 @@ def segment(input_file, method, p0=None, prior=None):
     return segmentation
 
 
-# Segment a genomic BED/qBED file from the command line
-# Thin wrapper for segment()
 def segment_from_command_line(args):
+    """Wrapper function for the command line function ``blockify segment``
+
+    Parameters
+    ----------
+    args: ``argparse.Namespace`` object
+        Input from command line
+
+    Returns
+    -------
+    segmentation: SegmentationRecord
+        A SegmentationRecord from segmenting the command line data
+    """
+
     input_file = BedTool(args.input)
     # Segment the input file
     return segment(input_file, args.method, p0=args.p0, prior=args.prior)

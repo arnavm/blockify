@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 from blockify import annotation
 from blockify import segmentation
 from blockify import normalization

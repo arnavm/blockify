@@ -12,6 +12,24 @@ warnings.simplefilter("ignore", category=ResourceWarning)
 
 
 def validateNormalizationArguments(input_file, regions_bed, libraryFactor, lengthFactor):
+    """Validates parameters passed via the command line.
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    regions_bed: BedTool object
+        BedTool object (instantiated from pybedtools) for regions over which we are normalizing input_file
+    libraryFactor: float
+        Scalar to normalize by input_file's library size.
+    lengthFactor: float or None
+        Scalar to normalize by each block's length. If None, no length normalization is performed.
+
+    Returns
+    -------
+    None: None
+    """
+
     # Check that the input file is sorted
     assert utilities.isSortedBEDObject(input_file), "input file must be sorted"
     # Check that regions is also sorted
@@ -24,6 +42,25 @@ def validateNormalizationArguments(input_file, regions_bed, libraryFactor, lengt
 
 
 def normalize(input_file, regions_bed, libraryFactor, lengthFactor):
+    """Core normalization method
+
+    Parameters
+    ----------
+    input_file: BedTool object
+        BedTool object (instantiated from pybedtools) for input data
+    regions_bed: BedTool object
+        BedTool object (instantiated from pybedtools) for regions over which we are normalizing input_file
+    libraryFactor: float
+        Scalar to normalize by input_file's library size.
+    lengthFactor: float or None
+        Scalar to normalize by each block's length. If None, no length normalization is performed.
+
+    Returns
+    -------
+    bedgraph: BedTool
+        A BedTool object in bedGraph format, using the intervals supplied in regions_bed
+    """
+
     # input_file and regions_bed are BedTool objects
     # Calculate library scaling constant, which is the total number
     # Validate normalization arguments
@@ -55,9 +92,20 @@ def normalize(input_file, regions_bed, libraryFactor, lengthFactor):
         )
 
 
-# Normalize the rate of events in a file over a set of regions
-# Thin wrapper for normalize()
 def normalize_from_command_line(args):
+    """Wrapper function for the command line function ``blockify normalize``
+
+    Parameters
+    ----------
+    args: ``argparse.Namespace`` object
+        Input from command line
+
+    Returns
+    -------
+    bedgraph: BedTool
+        Normalized command line data in bedGraph format
+    """
+
     input_file = BedTool(args.input)
     # If regions has been supplied, use it;
     if args.regions:
