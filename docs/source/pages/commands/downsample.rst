@@ -1,3 +1,5 @@
+.. _downsample:
+
 Command: downsample
 ===================
 

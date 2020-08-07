@@ -1,3 +1,4 @@
 blockify==0.2.0
 sphinx-argparse
 sphinx_rtd_theme
+sphinxcontrib-bibtex

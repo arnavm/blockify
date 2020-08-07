@@ -1,3 +1,5 @@
+.. _normalize:
+
 Command: normalize
 ==================
 

@@ -1,5 +1,5 @@
 blockify
-==================================================
+========
 
 .. image:: https://img.shields.io/pypi/v/blockify.svg
    :target: https://pypi.python.org/pypi/blockify
@@ -11,18 +11,19 @@ blockify
    :target: https://travis-ci.org/arnavm/blockify
    :alt: Build Status
 .. image:: https://readthedocs.org/projects/blockify/badge/?version=latest
-  :target: http://blockify.readthedocs.io/en/latest/?badge=latest
-  :alt: Documentation Status
+   :target: http://blockify.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
 
 Blockify is a command line program and Python library for genome segmentation and peak calling using Bayesian blocks.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Contents
 
    pages/introduction
    pages/installation
    pages/tutorial
+   pages/tips
    pages/commands/blockify
    pages/commands/segment
    pages/commands/call
