@@ -1,11 +1,26 @@
+import codecs
+import os.path
 import setuptools
+
+def read(rel_path):
+    here = os.path.abspath(os.path.dirname(__file__))
+    with codecs.open(os.path.join(here, rel_path), 'r') as fp:
+        return fp.read()
+
+def get_version(rel_path):
+    for line in read(rel_path).splitlines():
+        if line.startswith('__version__'):
+            delim = '"' if '"' in line else "'"
+            return line.split(delim)[1]
+    else:
+        raise RuntimeError("Unable to find version string.")
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="blockify", # Replace with your own username
-    version="0.2.0",
+    name="blockify", 
+    version=get_version("lib/blockify/__init__.py"),
     author="Arnav Moudgil",
     author_email="amoudgil@wustl.edu",
     description="Fast and optimal genome segmentation with Bayesian blocks",
