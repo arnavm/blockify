@@ -9,7 +9,7 @@ Fast, mathematically optimal genome segmentation with Bayesian blocks
 
 `pip install blockify`
 
-The earliest production-ready version of blockify is 0.1.2.
+The earliest recommended version of blockify is 0.2.1.
 
 ## Usage
 
