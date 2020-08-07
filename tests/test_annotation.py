@@ -70,10 +70,11 @@ class TestAnnotation(unittest.TestCase):
             ]
         )
         result, intermediate = annotation.annotate_from_command_line(args)
+        result.to_dataframe().to_csv("tests/data/HCT-116_PBase.bed", sep='\t', index=None, header=None)
         os.remove("tests/data/HCT-116_PBase.ccf")
         os.remove("tests/data/HCT-116_PBase.blocks")
         os.remove("tests/data/hg38_TTAA.bed")
-        self.assertEqual(len(result), 1939)
+        self.assertEqual(len(result), 1935)
 
     def test_SP1_PBase(self):
         PBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471636&format=file&file=GSM4471636%5FHCT%2D116%5FPBase%2Eccf%2Etxt%2Egz"
@@ -96,10 +97,10 @@ class TestAnnotation(unittest.TestCase):
                 "tests/data/HCT-116_PBase.ccf",
                 "--distance",
                 "250",
-                "--pValueCutoff",
-                "1e-6",
-                "--pseudocount",
-                "0.1",
+                "--alpha",
+                "0.05",
+                "--correction",
+                "fdr_bh",
                 "--tight",
             ]
         )
@@ -107,7 +108,7 @@ class TestAnnotation(unittest.TestCase):
         os.remove("tests/data/HCT-116_SP1-PBase.ccf")
         os.remove("tests/data/HCT-116_SP1-PBase.blocks")
         os.remove("tests/data/HCT-116_PBase.ccf")
-        self.assertEqual(len(result), 5067)
+        self.assertEqual(len(result), 8356)
 
     def test_HyPBase(self):
         HyPBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471638&format=file&file=GSM4471638%5FHCT%2D116%5FHyPBase%2Eccf%2Etxt%2Egz"
@@ -139,7 +140,7 @@ class TestAnnotation(unittest.TestCase):
         os.remove("tests/data/HCT-116_HyPBase.ccf")
         os.remove("tests/data/HCT-116_HyPBase.blocks")
         os.remove("tests/data/hg38_TTAA.bed")
-        self.assertEqual(len(result), 1956)
+        self.assertEqual(len(result), 1951)
 
     def test_SP1_HyPBase(self):
         HyPBase_url = "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM4471638&format=file&file=GSM4471638%5FHCT%2D116%5FHyPBase%2Eccf%2Etxt%2Egz"
@@ -162,10 +163,10 @@ class TestAnnotation(unittest.TestCase):
                 "tests/data/HCT-116_HyPBase.ccf",
                 "--distance",
                 "250",
-                "--pValueCutoff",
-                "1e-22",
-                "--pseudocount",
-                "0.1",
+                "--alpha",
+                "0.05",
+                "--correction",
+                "fdr_bh",
                 "--tight",
             ]
         )
@@ -173,7 +174,7 @@ class TestAnnotation(unittest.TestCase):
         os.remove("tests/data/HCT-116_SP1-HyPBase.ccf")
         os.remove("tests/data/HCT-116_SP1-HyPBase.blocks")
         os.remove("tests/data/HCT-116_HyPBase.ccf")
-        self.assertEqual(len(result), 5049)
+        self.assertEqual(len(result), 24739)
 
 
 class TestAnnotationParameters(unittest.TestCase):
