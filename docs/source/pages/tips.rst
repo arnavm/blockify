@@ -22,7 +22,8 @@ Miscellaneous
 * Similarly, the regions over which to run ``blockify call`` need not be Bayesian blocks. The program can operate on any set of intervals provided in BED format. This flexibility can be useful if there are a set of features that are biologically meaningful to your analysis. For example, this could be a file of promoter regions or accessible loci where a TF might be bound.
 * Peaks are output in BED6 format with a generic annotation, like ``peak_1743``. The program does not re-calculate p-values on these *post hoc* by default. If you want to further calculate significance or density of these peaks, simply re-run ``blockify call`` with the ``--intermediate`` flag set and supply the peaks file to ``-r/--regions``. Then inspect the intermediate file for these details. Picking up with the BRD4 example from the :ref:`tutorial`:
 
-.. code-block::
+
+.. code-block:: bash
 
    > blockify call -i HCT-116_PBase.ccf -r HCT-116_PBase_peaks.bed -bg hg38_TTAA.bed -c 0 -p 1e-30 -d 12500 --intermediate HCT-116_PBase_peaks_annotated.csv > /dev/null
    > head -n 2 HCT-116_PBase_peaks_annotated.csv
