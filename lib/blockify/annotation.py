@@ -307,7 +307,7 @@ def annotate(
     data = regions_bed.intersect(input_file, c=True, sorted=True).intersect(background_file, c=True, sorted=True)
     # Convert to DataFrame
     df = data.to_dataframe()
-    df = df.rename(index=str, columns={"name": "Input", "score": "Background"})
+    df = df.rename(index=str, columns={df.columns[-2]: "Input", df.columns[-1]: "Background"})
 
     # Calculate the normalized background (Normed_bg) number of events
     # by multiplying Background by scalingFactor. Then add the pseudocount,
