@@ -15,14 +15,16 @@ blockify_parser = argparse.ArgumentParser(
     description="Genomic peak caller for one-dimensional data",
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
-# Add a version option
-blockify_parser.add_argument('--version', action='version',
-                    version='%(prog)s {version}'.format(version=blockify.__version__))
+# Get version
+blockify_parser.add_argument("-v", "--version", action="version",
+                    version="%(prog)s {version}".format(version=blockify.__version__))
+
 # Sub-parsers
 subcommands = blockify_parser.add_subparsers(
     help="Subcommands",
     dest="command"
 )
+
 # Parent parser (shared by sub-parsers)
 input_parser = argparse.ArgumentParser(
     add_help=False,
