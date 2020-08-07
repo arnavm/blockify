@@ -1,4 +1,5 @@
 import argparse
+import blockify
 import sys
 
 # Initialize defaults
@@ -14,6 +15,9 @@ blockify_parser = argparse.ArgumentParser(
     description="Genomic peak caller for one-dimensional data",
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
+# Add a version option
+blockify_parser.add_argument('--version', action='version',
+                    version='%(prog)s {version}'.format(version=blockify.__version__))
 # Sub-parsers
 subcommands = blockify_parser.add_subparsers(
     help="Subcommands",
