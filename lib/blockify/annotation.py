@@ -428,4 +428,5 @@ def annotate_from_command_line(args):
         max_size=args.max,
         pseudocount=args.pseudocount,
         tight=args.tight,
+        summit=args.summit,
     )
